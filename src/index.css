@@ -121,55 +121,29 @@ button {
 
 /* 移动端响应式适配 */
 @media (max-width: 768px) {
-  body {
-    font-size: 14px;
+  /* 确保内容可见 */
+  .app-content {
+    display: flex !important;
+    min-width: 0 !important;
   }
 
-  /* 侧边栏默认折叠 */
+  /* 侧边栏缩小但保持可见 */
   .sidebar {
-    min-width: 0 !important;
-    width: 200px !important;
+    min-width: 160px !important;
+    width: 160px !important;
+    flex-shrink: 0 !important;
   }
 
   .sidebar.collapsed {
-    width: 0 !important;
-    min-width: 0 !important;
-    overflow: hidden;
-  }
-
-  /* AI 面板全屏显示 */
-  .ai-panel.expanded,
-  .ai-panel {
-    position: fixed !important;
-    right: 0 !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    z-index: 100 !important;
-  }
-
-  .ai-panel.collapsed {
     width: 48px !important;
+    min-width: 48px !important;
+    overflow: hidden;
   }
 
   /* 编辑器全宽 */
   .editor-container {
     flex: 1 !important;
     min-width: 0 !important;
-  }
-
-  /* 设置弹窗全屏 */
-  .settings-modal {
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    border-radius: 0 !important;
-  }
-
-  /* 标题栏调整 */
-  .title-bar {
-    padding: 8px 12px !important;
   }
 
   /* 调整按钮大小便于触摸 */
@@ -184,17 +158,6 @@ button {
   input[type="password"] {
     min-height: 40px;
     font-size: 16px; /* 防止 iOS 缩放 */
-  }
-
-  /* 快速操作按钮 */
-  .ai-quick-actions {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .ai-quick-actions button {
-    flex-shrink: 0;
   }
 }
 
