@@ -20,10 +20,13 @@ export interface Note {
   updatedAt: number;
 }
 
+export type AIProvider = 'minimax' | 'kimi' | 'glm';
+
 export interface Config {
   theme: 'light' | 'dark' | 'system';
   fontSize: number;
   autoSaveInterval: number;
+  aiProvider: AIProvider;
   aiApiKey: string;
 }
 

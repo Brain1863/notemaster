@@ -14,6 +14,16 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/minimax/, '/v1/text/chatcompletion_v2'),
       },
+      '/api/kimi': {
+        target: 'https://api.moonshot.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/kimi/, '/v1/chat/completions'),
+      },
+      '/api/glm': {
+        target: 'https://open.bigmodel.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/glm/, '/api/paas/v4/chat/completions'),
+      },
     },
   }
 })

@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '../store';
-import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Key, Type, Clock } from 'lucide-react';
+import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Key, Type, Clock, Bot } from 'lucide-react';
+import type { AIProvider } from '../types';
 import './Settings.css';
 
 interface SettingsProps {
@@ -13,9 +14,19 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
   const [apiKey, setApiKey] = useState(config.aiApiKey);
   const [showApiKey, setShowApiKey] = useState(false);
 
+  useEffect(() => {
+    setApiKey(config.aiApiKey);
+  }, [config.aiApiKey]);
+
   const handleSaveApiKey = () => {
     updateConfig({ aiApiKey: apiKey });
   };
+
+  const aiProviders: { value: AIProvider; label: string; hint: string }[] = [
+    { value: 'minimax', label: 'MiniMax', hint: 'Moonshot AI' },
+    { value: 'kimi', label: 'Kimi', hint: '月之暗面' },
+    { value: 'glm', label: 'GLM', hint: '智谱 AI' },
+  ];
 
   if (!isOpen) return null;
 
@@ -106,11 +117,26 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
           {/* AI 设置 */}
           <div className="settings-section">
             <h3>
-              <Key size={16} />
+              <Bot size={16} />
               AI 配置
             </h3>
             <div className="setting-item">
-              <label>MiniMax API Key</label>
+              <label>AI 提供商</label>
+              <div className="ai-provider-options">
+                {aiProviders.map((provider) => (
+                  <button
+                    key={provider.value}
+                    className={`provider-btn ${config.aiProvider === provider.value ? 'active' : ''}`}
+                    onClick={() => updateConfig({ aiProvider: provider.value })}
+                  >
+                    <span className="provider-name">{provider.label}</span>
+                    <span className="provider-hint">{provider.hint}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="setting-item">
+              <label>{config.aiProvider === 'minimax' ? 'MiniMax' : config.aiProvider === 'kimi' ? 'Kimi' : 'GLM'} API Key</label>
               <div className="api-key-input">
                 <input
                   type={showApiKey ? 'text' : 'password'}
@@ -129,7 +155,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
                 </button>
               </div>
               <p className="setting-hint">
-                获取 API Key 访问 MiniMax 开放平台
+                获取 API Key 访问 {config.aiProvider === 'minimax' ? 'MiniMax' : config.aiProvider === 'kimi' ? 'Kimi' : '智谱 AI'} 开放平台
               </p>
             </div>
           </div>

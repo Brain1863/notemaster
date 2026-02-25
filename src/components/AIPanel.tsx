@@ -1,7 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store';
 import { MessageCircle, X, Send, Settings, ChevronLeft, ChevronRight, Trash2, Sparkles } from 'lucide-react';
+import type { AIProvider } from '../types';
 import './AIPanel.css';
+
+// AI API 配置
+const AI_CONFIG: Record<AIProvider, { endpoint: string; model: string }> = {
+  minimax: {
+    endpoint: '/api/minimax',
+    model: 'abab6.5s-chat',
+  },
+  kimi: {
+    endpoint: '/api/kimi',
+    model: 'moonshot-v1-8k',
+  },
+  glm: {
+    endpoint: '/api/glm',
+    model: 'glm-4-flash',
+  },
+};
 
 export function AIPanel() {
   const { isAIPanelOpen, toggleAIPanel, isAIPanelExpanded, setAIPanelExpanded, addAIMessage, clearAIMessages, addGlobalAIMessage, clearGlobalAIMessages, globalAIMessages, config, notes, selectedNoteId } = useStore();
@@ -36,7 +53,8 @@ export function AIPanel() {
 
     if (!config.aiApiKey) {
       console.log('No API key, setting error');
-      setError('请先在设置中配置 MiniMax API Key');
+      const providerName = config.aiProvider === 'minimax' ? 'MiniMax' : config.aiProvider === 'kimi' ? 'Kimi' : 'GLM';
+      setError(`请先在设置中配置 ${providerName} API Key`);
       return;
     }
 
@@ -54,33 +72,59 @@ export function AIPanel() {
     setIsLoading(true);
 
     try {
-      console.log('Calling MiniMax API...');
+      const provider = config.aiProvider;
+      const aiConfig = AI_CONFIG[provider];
+      console.log(`Calling ${provider} API...`);
+
+      // 构建消息列表
+      const messages = [
+        {
+          role: 'system',
+          content: isGlobalMode
+            ? '你是一个智能AI助手，擅长回答各种问题、帮助用户解决问题。请用中文回复。'
+            : '你是一个智能笔记助手，擅长帮助用户写作、润色文章、回答问题。请用中文回复。'
+        },
+        ...aiMessages.slice(-10).map(m => ({
+          role: m.role,
+          content: m.content
+        })),
+        {
+          role: 'user',
+          content: selectedNote?.content ? `当前笔记内容：\n${selectedNote.content}\n\n用户问题：${userMessage}` : userMessage
+        }
+      ];
+
+      // 根据不同 AI 供应商构建请求
+      let requestBody: Record<string, unknown>;
+      if (provider === 'minimax') {
+        requestBody = {
+          model: aiConfig.model,
+          messages,
+        };
+      } else if (provider === 'kimi') {
+        requestBody = {
+          model: aiConfig.model,
+          messages,
+          temperature: 0.7,
+        };
+      } else if (provider === 'glm') {
+        requestBody = {
+          model: aiConfig.model,
+          messages,
+          temperature: 0.7,
+        };
+      } else {
+        throw new Error('不支持的 AI 提供商');
+      }
+
       // 使用 Vite 代理避免 CORS
-      const response = await fetch('/api/minimax', {
+      const response = await fetch(aiConfig.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${config.aiApiKey}`,
         },
-        body: JSON.stringify({
-          model: 'abab6.5s-chat',
-          messages: [
-            {
-              role: 'system',
-              content: isGlobalMode
-                ? '你是一个智能AI助手，擅长回答各种问题、帮助用户解决问题。请用中文回复。'
-                : '你是一个智能笔记助手，擅长帮助用户写作、润色文章、回答问题。请用中文回复。'
-            },
-            ...aiMessages.slice(-10).map(m => ({
-              role: m.role,
-              content: m.content
-            })),
-            {
-              role: 'user',
-              content: selectedNote?.content ? `当前笔记内容：\n${selectedNote.content}\n\n用户问题：${userMessage}` : userMessage
-            }
-          ]
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       console.log('Response status:', response.status);
@@ -96,10 +140,13 @@ export function AIPanel() {
         }
       };
 
+      // 通用响应处理
       if (data.choices && data.choices[0]?.message?.content) {
         addAssistantMessage(data.choices[0].message.content);
       } else if (data.base_resp?.status_msg) {
         addAssistantMessage(`API 错误: ${data.base_resp.status_msg}`);
+      } else if (data.msg) {
+        addAssistantMessage(data.msg);
       } else {
         addAssistantMessage('抱歉，API 返回格式异常。请检查 API Key 是否正确。响应: ' + JSON.stringify(data).substring(0, 200));
       }

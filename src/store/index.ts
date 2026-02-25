@@ -54,6 +54,7 @@ const defaultConfig: Config = {
   theme: 'light',
   fontSize: 15,
   autoSaveInterval: 3000,
+  aiProvider: 'minimax',
   aiApiKey: '',
 };
 
