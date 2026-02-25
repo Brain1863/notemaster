@@ -8,7 +8,7 @@ import { AIFloatingButton } from './components/AIFloatingButton';
 import './App.css';
 
 function App() {
-  const { config, initializeData, isAIPanelOpen, toggleAIPanel } = useStore();
+  const { config, initializeData, isAIPanelOpen } = useStore();
   const [isMobileAIOpen, setIsMobileAIOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
