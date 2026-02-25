@@ -125,50 +125,78 @@ button {
   .app-content {
     display: flex !important;
     min-width: 0 !important;
+    height: 100% !important;
   }
 
-  /* 侧边栏缩小但保持可见 */
+  /* 侧边栏默认隐藏，点击展开 */
   .sidebar {
-    min-width: 160px !important;
-    width: 160px !important;
-    flex-shrink: 0 !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 44px !important;
+    bottom: 0 !important;
+    width: 200px !important;
+    z-index: 50 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.2s ease !important;
+    background: var(--sidebar-bg) !important;
+  }
+
+  .sidebar:not(.collapsed) {
+    transform: translateX(0) !important;
   }
 
   .sidebar.collapsed {
-    width: 48px !important;
-    min-width: 48px !important;
-    overflow: hidden;
+    transform: translateX(-100%) !important;
   }
 
   /* 编辑器全宽 */
   .editor-container {
     flex: 1 !important;
-    min-width: 0 !important;
+    min-width: 100% !important;
+    width: 100% !important;
   }
 
   /* 调整按钮大小便于触摸 */
   button {
-    min-height: 36px;
-    min-width: 36px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 12px;
   }
 
   /* 输入框触摸友好 */
   textarea,
   input[type="text"],
   input[type="password"] {
-    min-height: 40px;
-    font-size: 16px; /* 防止 iOS 缩放 */
+    min-height: 44px;
+    font-size: 16px !important; /* 防止 iOS 缩放 */
+  }
+
+  /* 标题栏调整 */
+  .title-bar {
+    height: 44px !important;
+    padding: 0 12px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .title-bar h1 {
+    font-size: 16px !important;
+  }
+
+  /* AI面板全屏 */
+  .ai-panel.expanded {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
-/* 更小屏幕 */
-@media (max-width: 480px) {
+/* 更小屏幕 (iPhone SE 等) */
+@media (max-width: 375px) {
   .sidebar {
-    width: 160px !important;
+    width: 180px !important;
   }
 
   .title-bar {
-    padding: 6px 8px !important;
+    padding: 0 8px !important;
   }
 
   .title-bar h1 {
