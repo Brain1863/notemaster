@@ -20,7 +20,12 @@ const AI_CONFIG: Record<AIProvider, { endpoint: string; model: string }> = {
   },
 };
 
-export function AIPanel() {
+interface AIPanelProps {
+  isFloating?: boolean;
+  onClose?: () => void;
+}
+
+export function AIPanel({ isFloating = false, onClose }: AIPanelProps) {
   const { isAIPanelOpen, toggleAIPanel, isAIPanelExpanded, setAIPanelExpanded, addAIMessage, clearAIMessages, addGlobalAIMessage, clearGlobalAIMessages, globalAIMessages, config, notes, selectedNoteId } = useStore();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -182,7 +187,7 @@ export function AIPanel() {
     }
   };
 
-  if (!isAIPanelOpen) {
+  if (!isAIPanelOpen && !isFloating) {
     return (
       <div className="ai-panel-collapsed">
         <button className="ai-toggle-btn" onClick={toggleAIPanel} title="展开 AI 助手">
@@ -193,19 +198,24 @@ export function AIPanel() {
     );
   }
 
+  // 浮窗模式下直接展开
+  const showExpanded = isFloating || isAIPanelExpanded;
+
   return (
-    <div className={`ai-panel ${isAIPanelExpanded ? 'expanded' : 'collapsed'}`}>
+    <div className={`ai-panel ${showExpanded ? 'expanded' : 'collapsed'} ${isFloating ? 'floating' : ''}`}>
       <div className="ai-panel-header">
         <div className="header-left">
-          <button
-            className="collapse-btn"
-            onClick={() => setAIPanelExpanded(!isAIPanelExpanded)}
-          >
-            {isAIPanelExpanded ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-          </button>
+          {!isFloating && (
+            <button
+              className="collapse-btn"
+              onClick={() => setAIPanelExpanded(!isAIPanelExpanded)}
+            >
+              {isAIPanelExpanded ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
+          )}
           <MessageCircle size={18} />
           <span>AI 助手</span>
-          {isAIPanelExpanded && (
+          {showExpanded && (
             isGlobalMode ? (
               <span className="ai-note-indicator global-mode">通用模式</span>
             ) : selectedNote ? (
@@ -216,7 +226,7 @@ export function AIPanel() {
           )}
         </div>
         <div className="header-right">
-          {isAIPanelExpanded && aiMessages.length > 0 && (
+          {showExpanded && aiMessages.length > 0 && (
             <button
               className="header-btn"
               onClick={() => isGlobalMode ? clearGlobalAIMessages() : clearAIMessages(selectedNoteId!)}
@@ -225,13 +235,13 @@ export function AIPanel() {
               <Trash2 size={14} />
             </button>
           )}
-          <button className="header-btn" onClick={toggleAIPanel} title="关闭">
+          <button className="header-btn" onClick={isFloating ? onClose : toggleAIPanel} title="关闭">
             <X size={16} />
           </button>
         </div>
       </div>
 
-      {isAIPanelExpanded && (
+      {showExpanded && (
         <>
           {!config.aiApiKey ? (
             <div className="ai-settings-prompt">

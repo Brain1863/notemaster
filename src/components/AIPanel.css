@@ -341,3 +341,18 @@
   background: #fef2f2;
   border-top: 1px solid #fecaca;
 }
+
+/* 浮窗模式样式 - 移动端 */
+@media (max-width: 768px) {
+  .ai-panel.floating {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+  }
+
+  .ai-panel.floating.expanded {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+}
