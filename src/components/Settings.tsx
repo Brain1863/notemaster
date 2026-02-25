@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../store';
-import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Key, Type, Clock, Bot } from 'lucide-react';
+import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Type, Clock, Bot } from 'lucide-react';
 import type { AIProvider } from '../types';
 import './Settings.css';
 
