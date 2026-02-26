@@ -54,17 +54,17 @@ function App() {
       <div className="app-content">
         <Sidebar />
         <Editor />
-        {/* 移动端使用浮窗按钮，桌面端使用普通面板 */}
-        {isMobile ? (
-          <AIFloatingButton
-            isOpen={isMobileAIOpen}
-            onToggle={handleMobileAIToggle}
-            onClose={handleMobileAIClose}
-          />
-        ) : (
-          isAIPanelOpen ? <AIPanel /> : null
-        )}
+        {/* 桌面端使用普通 AI 面板 */}
+        {!isMobile && isAIPanelOpen ? <AIPanel /> : null}
       </div>
+      {/* 移动端 AI 浮窗按钮 - 放在 app 容器外面 */}
+      {isMobile && (
+        <AIFloatingButton
+          isOpen={isMobileAIOpen}
+          onToggle={handleMobileAIToggle}
+          onClose={handleMobileAIClose}
+        />
+      )}
     </div>
   );
 }
