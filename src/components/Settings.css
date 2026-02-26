@@ -281,3 +281,29 @@
   font-size: 11px;
   color: var(--text-secondary);
 }
+
+.export-options {
+  display: flex;
+  gap: 8px;
+}
+
+.export-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.export-btn:hover {
+  background: var(--primary-hover);
+}

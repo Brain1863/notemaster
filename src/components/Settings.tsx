@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../store';
-import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Type, Clock, Bot } from 'lucide-react';
+import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Type, Clock, Bot, Download } from 'lucide-react';
 import type { AIProvider } from '../types';
+import { exportNote } from '../utils/export';
 import './Settings.css';
 
 interface SettingsProps {
@@ -10,9 +11,12 @@ interface SettingsProps {
 }
 
 export function Settings({ isOpen, onClose }: SettingsProps) {
-  const { config, updateConfig } = useStore();
+  const { config, updateConfig, selectedNoteId, notes } = useStore();
   const [apiKey, setApiKey] = useState(config.aiApiKey);
   const [showApiKey, setShowApiKey] = useState(false);
+
+  // 获取当前选中的笔记
+  const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
   useEffect(() => {
     setApiKey(config.aiApiKey);
@@ -44,6 +48,33 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
         </div>
 
         <div className="settings-content">
+          {/* 导出笔记 */}
+          {selectedNote && (
+            <div className="settings-section">
+              <h3>
+                <Download size={16} />
+                导出笔记
+              </h3>
+              <div className="setting-item">
+                <label>当前笔记：{selectedNote.title || '未命名'}</label>
+                <div className="export-options">
+                  <button
+                    className="export-btn"
+                    onClick={() => exportNote(selectedNote, 'md')}
+                  >
+                    导出 Markdown (.md)
+                  </button>
+                  <button
+                    className="export-btn"
+                    onClick={() => exportNote(selectedNote, 'txt')}
+                  >
+                    导出纯文本 (.txt)
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 主题设置 */}
           <div className="settings-section">
             <h3>
