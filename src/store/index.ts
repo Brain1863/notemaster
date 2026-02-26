@@ -48,6 +48,9 @@ interface AppState {
 
   // 初始化
   initializeData: () => void;
+
+  // 数据导入导出
+  importData: (data: { folders: Folder[]; notes: Note[]; config: Config; globalAIMessages: AIMessage[] }) => void;
 }
 
 const defaultConfig: Config = {
@@ -291,6 +294,18 @@ export const useStore = create<AppState>()(
 
       setAIPanelExpanded: (expanded) => {
         set({ isAIPanelExpanded: expanded });
+      },
+
+      // 导入数据
+      importData: (data) => {
+        set({
+          folders: data.folders || [],
+          notes: data.notes || [],
+          config: data.config || defaultConfig,
+          globalAIMessages: data.globalAIMessages || [],
+          selectedNoteId: null,
+          selectedFolderId: null,
+        });
       },
     }),
     {

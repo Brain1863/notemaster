@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../store';
-import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Type, Clock, Bot, Download } from 'lucide-react';
+import { Settings as SettingsIcon, X, Sun, Moon, Monitor, Type, Clock, Bot, Download, Upload } from 'lucide-react';
 import type { AIProvider } from '../types';
-import { exportNote } from '../utils/export';
+import { exportNote, exportAllData, importData } from '../utils/export';
 import './Settings.css';
 
 interface SettingsProps {
@@ -11,7 +11,7 @@ interface SettingsProps {
 }
 
 export function Settings({ isOpen, onClose }: SettingsProps) {
-  const { config, updateConfig, selectedNoteId, notes } = useStore();
+  const { config, updateConfig, selectedNoteId, notes, folders, globalAIMessages, importData: doImportData } = useStore();
   const [apiKey, setApiKey] = useState(config.aiApiKey);
   const [showApiKey, setShowApiKey] = useState(false);
 
@@ -74,6 +74,41 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
               </div>
             </div>
           )}
+
+          {/* 数据备份 */}
+          <div className="settings-section">
+            <h3>
+              <Upload size={16} />
+              数据备份
+            </h3>
+            <div className="setting-item">
+              <label>导出/导入全部数据（保存在本地文件）</label>
+              <div className="export-options">
+                <button
+                  className="export-btn"
+                  onClick={() => exportAllData({ folders, notes, config, globalAIMessages })}
+                >
+                  导出备份
+                </button>
+                <button
+                  className="export-btn"
+                  onClick={async () => {
+                    const data = await importData();
+                    if (data) {
+                      if (confirm('导入数据将覆盖当前所有笔记，确定要继续吗？')) {
+                        doImportData(data);
+                        alert('导入成功！');
+                        onClose();
+                      }
+                    }
+                  }}
+                >
+                  导入备份
+                </button>
+              </div>
+              <p className="setting-hint">导出的备份文件可以在任何时候导入恢复</p>
+            </div>
+          </div>
 
           {/* 主题设置 */}
           <div className="settings-section">
