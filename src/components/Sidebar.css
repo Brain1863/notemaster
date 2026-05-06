@@ -21,6 +21,89 @@
   color: var(--text-primary);
 }
 
+/* 搜索框 */
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-clear:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.search-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.search-result-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.search-result-title {
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-folder {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.search-highlight {
+  background: #FEF08A;
+  color: #1E293B;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+[data-theme='dark'] .search-highlight {
+  background: #854D0E;
+  color: #FEF08A;
+}
+
 .sidebar-section {
   display: flex;
   flex-direction: column;
@@ -198,6 +281,35 @@
 
 .context-menu .delete-btn:hover {
   background: #FEF2F2;
+}
+
+/* 移动子菜单 */
+.move-submenu {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  margin: 4px 0 4px 8px;
+  border-left: 2px solid var(--border-color);
+}
+
+.move-submenu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  text-align: left;
+}
+
+.move-submenu button:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
 }
 
 .menu-divider {

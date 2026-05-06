@@ -11,6 +11,9 @@ import {
   ChevronDown,
   Trash2,
   Edit3,
+  Search,
+  MoveRight,
+  X,
 } from 'lucide-react';
 import { useStore } from '../store';
 import type { Folder as FolderType, Note } from '../types';
@@ -20,11 +23,13 @@ interface TreeItemProps {
   item: FolderType | Note;
   isFolder: boolean;
   level: number;
+  highlight?: string;
   children?: React.ReactNode;
 }
 
-function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
+function TreeItem({ item, isFolder, level, highlight, children }: TreeItemProps) {
   const [showMenu, setShowMenu] = useState(false);
+  const [showMoveMenu, setShowMoveMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
@@ -40,6 +45,8 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
     addFolder,
     addNote,
     toggleFavorite,
+    moveNote,
+    folders,
   } = useStore();
 
   const isSelected = isFolder ? false : selectedNoteId === item.id;
@@ -49,6 +56,7 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setShowMenu(false);
+        setShowMoveMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -111,6 +119,27 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
     setShowMenu(false);
   };
 
+  const handleMoveNote = (targetFolderId: string) => {
+    moveNote(item.id, targetFolderId);
+    setShowMoveMenu(false);
+    setShowMenu(false);
+  };
+
+  // 高亮匹配文本
+  const renderHighlightedName = (name: string) => {
+    if (!highlight) return name;
+    const escaped = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    const parts = name.split(regex);
+    return parts.map((part, i) =>
+      part.toLowerCase() === highlight.toLowerCase() ? (
+        <mark key={i} className="search-highlight">{part}</mark>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <div className="tree-item-container">
       <div
@@ -147,7 +176,9 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
           />
         ) : (
           <span className="item-name">
-            {isFolder ? (item as FolderType).name : (item as Note).title}
+            {isFolder
+              ? renderHighlightedName((item as FolderType).name)
+              : renderHighlightedName((item as Note).title)}
           </span>
         )}
 
@@ -161,6 +192,7 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
             onClick={(e) => {
               e.stopPropagation();
               setShowMenu(!showMenu);
+              setShowMoveMenu(false);
             }}
           >
             <MoreVertical size={14} />
@@ -182,17 +214,33 @@ function TreeItem({ item, isFolder, level, children }: TreeItemProps) {
                 <Edit3 size={14} /> 重命名
               </button>
               {!isFolder && (
-                <button onClick={handleToggleFavorite}>
-                  {(item as Note).isFavorite ? (
-                    <>
-                      <StarOff size={14} /> 取消收藏
-                    </>
-                  ) : (
-                    <>
-                      <Star size={14} /> 收藏
-                    </>
+                <>
+                  <button onClick={handleToggleFavorite}>
+                    {(item as Note).isFavorite ? (
+                      <>
+                        <StarOff size={14} /> 取消收藏
+                      </>
+                    ) : (
+                      <>
+                        <Star size={14} /> 收藏
+                      </>
+                    )}
+                  </button>
+                  <button onClick={() => setShowMoveMenu(!showMoveMenu)}>
+                    <MoveRight size={14} /> 移动到
+                  </button>
+                  {showMoveMenu && (
+                    <div className="move-submenu">
+                      {folders
+                        .filter((f) => f.id !== (item as Note).folderId)
+                        .map((f) => (
+                          <button key={f.id} onClick={() => handleMoveNote(f.id)}>
+                            <Folder size={12} /> {f.name}
+                          </button>
+                        ))}
+                    </div>
                   )}
-                </button>
+                </>
               )}
               <button onClick={handleDelete} className="delete-btn">
                 <Trash2 size={14} /> 删除
@@ -217,7 +265,36 @@ export function Sidebar() {
   const [showNewFolderInput, setShowNewFolderInput] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
 
+  // 搜索状态（节流：150ms）
+  const [searchInput, setSearchInput] = useState('');
+  const [displayQuery, setDisplayQuery] = useState('');
+  const searchTimerRef = useRef<number | null>(null);
+
   const rootFolders = folders.filter((f) => f.parentId === null);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchInput(val);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = window.setTimeout(() => {
+      setDisplayQuery(val.trim());
+    }, 150);
+  };
+
+  const clearSearch = () => {
+    setSearchInput('');
+    setDisplayQuery('');
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+  };
+
+  // 搜索结果
+  const searchResults = displayQuery
+    ? notes.filter(
+        (n) =>
+          n.title.toLowerCase().includes(displayQuery.toLowerCase()) ||
+          n.content.toLowerCase().includes(displayQuery.toLowerCase())
+      )
+    : [];
 
   const handleCreateFolder = () => {
     if (newFolderName.trim()) {
@@ -228,6 +305,11 @@ export function Sidebar() {
   };
 
   const favoriteNotes = notes.filter((n) => n.isFavorite);
+
+  // 获取笔记所在文件夹名称
+  const getFolderName = (folderId: string) => {
+    return folders.find((f) => f.id === folderId)?.name || '未知文件夹';
+  };
 
   const renderTree = (parentId: string | null, level: number): React.ReactNode => {
     const childFolders = folders.filter((f) => f.parentId === parentId);
@@ -241,6 +323,7 @@ export function Sidebar() {
             item={folder}
             isFolder={true}
             level={level}
+            highlight={displayQuery}
           >
             {renderTree(folder.id, level + 1)}
           </TreeItem>
@@ -251,10 +334,28 @@ export function Sidebar() {
             item={note}
             isFolder={false}
             level={level}
+            highlight={displayQuery}
           />
         ))}
       </>
     );
+  };
+
+  // 新建笔记：优先使用当前选中笔记所在的文件夹
+  const handleNewNote = () => {
+    if (selectedNoteId) {
+      const currentNote = notes.find((n) => n.id === selectedNoteId);
+      if (currentNote) {
+        addNote(currentNote.folderId);
+        return;
+      }
+    }
+    const firstFolder = folders[0];
+    if (firstFolder) {
+      addNote(firstFolder.id);
+    } else {
+      addFolder('我的笔记');
+    }
   };
 
   return (
@@ -263,8 +364,54 @@ export function Sidebar() {
         <h2>NoteMaster</h2>
       </div>
 
+      {/* 搜索框 */}
+      <div className="sidebar-search">
+        <Search size={14} className="search-icon" />
+        <input
+          type="text"
+          placeholder="搜索笔记..."
+          value={searchInput}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
+        {searchInput && (
+          <button className="search-clear" onClick={clearSearch}>
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
+      {/* 搜索结果 */}
+      {displayQuery && (
+        <div className="sidebar-section flex-grow">
+          <div className="section-header">
+            <Search size={14} />
+            <span>搜索结果 ({searchResults.length})</span>
+          </div>
+          <div className="section-content">
+            {searchResults.length === 0 ? (
+              <div className="search-empty">未找到匹配笔记</div>
+            ) : (
+              searchResults.map((note) => (
+                <div
+                  key={note.id}
+                  className={`sidebar-note-item ${selectedNoteId === note.id ? 'selected' : ''}`}
+                  onClick={() => selectNote(note.id)}
+                >
+                  <FileText size={14} className="note-icon-color" />
+                  <div className="search-result-info">
+                    <span className="search-result-title">{note.title || '未命名'}</span>
+                    <span className="search-result-folder">{getFolderName(note.folderId)}</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 收藏夹 */}
-      {favoriteNotes.length > 0 && (
+      {!displayQuery && favoriteNotes.length > 0 && (
         <div className="sidebar-section">
           <div className="section-header">
             <Star size={14} />
@@ -286,63 +433,55 @@ export function Sidebar() {
       )}
 
       {/* 文件夹树 */}
-      <div className="sidebar-section flex-grow">
-        <div className="section-header">
-          <span>文件夹</span>
-          <button
-            className="add-btn"
-            onClick={() => setShowNewFolderInput(true)}
-            title="新建文件夹"
-          >
-            <Plus size={14} />
-          </button>
-        </div>
-
-        {showNewFolderInput && (
-          <div className="new-item-input">
-            <input
-              type="text"
-              placeholder="文件夹名称"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleCreateFolder();
-                if (e.key === 'Escape') setShowNewFolderInput(false);
-              }}
-              autoFocus
-            />
-            <button onClick={handleCreateFolder}>确认</button>
-            <button onClick={() => setShowNewFolderInput(false)}>取消</button>
-          </div>
-        )}
-
-        <div className="section-content tree-view">
-          {rootFolders.map((folder) => (
-            <TreeItem
-              key={folder.id}
-              item={folder}
-              isFolder={true}
-              level={0}
+      {!displayQuery && (
+        <div className="sidebar-section flex-grow">
+          <div className="section-header">
+            <span>文件夹</span>
+            <button
+              className="add-btn"
+              onClick={() => setShowNewFolderInput(true)}
+              title="新建文件夹"
             >
-              {renderTree(folder.id, 1)}
-            </TreeItem>
-          ))}
+              <Plus size={14} />
+            </button>
+          </div>
+
+          {showNewFolderInput && (
+            <div className="new-item-input">
+              <input
+                type="text"
+                placeholder="文件夹名称"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleCreateFolder();
+                  if (e.key === 'Escape') setShowNewFolderInput(false);
+                }}
+                autoFocus
+              />
+              <button onClick={handleCreateFolder}>确认</button>
+              <button onClick={() => setShowNewFolderInput(false)}>取消</button>
+            </div>
+          )}
+
+          <div className="section-content tree-view">
+            {rootFolders.map((folder) => (
+              <TreeItem
+                key={folder.id}
+                item={folder}
+                isFolder={true}
+                level={0}
+              >
+                {renderTree(folder.id, 1)}
+              </TreeItem>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 底部操作 */}
       <div className="sidebar-footer">
-        <button
-          className="new-note-btn"
-          onClick={() => {
-            const firstFolder = folders[0];
-            if (firstFolder) {
-              addNote(firstFolder.id);
-            } else {
-              addFolder('我的笔记');
-            }
-          }}
-        >
+        <button className="new-note-btn" onClick={handleNewNote}>
           <Plus size={16} />
           <span>新建笔记</span>
         </button>

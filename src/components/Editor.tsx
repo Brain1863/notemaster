@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -10,6 +10,8 @@ import './Editor.css';
 export function Editor() {
   const { notes, selectedNoteId, updateNote, config } = useStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const saveTimerRef = useRef<number | null>(null);
+  const [hasUnsaved, setHasUnsaved] = useState(false);
 
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
 
@@ -28,7 +30,17 @@ export function Editor() {
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       if (selectedNoteId && selectedNote) {
-        updateNote(selectedNoteId, { content: html });
+        // 标记为未保存
+        setHasUnsaved(true);
+        // 清除之前的 timer
+        if (saveTimerRef.current) {
+          clearTimeout(saveTimerRef.current);
+        }
+        // debounce 保存，间隔使用用户配置的 autoSaveInterval
+        saveTimerRef.current = window.setTimeout(() => {
+          updateNote(selectedNoteId, { content: html });
+          setHasUnsaved(false);
+        }, config.autoSaveInterval);
       }
     },
     editorProps: {
@@ -42,6 +54,13 @@ export function Editor() {
   // 当切换笔记时更新编辑器内容
   useEffect(() => {
     if (editor && selectedNote) {
+      // 切换笔记时取消待保存的 timer
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      setHasUnsaved(false);
+
       const currentContent = editor.getHTML();
       if (currentContent !== selectedNote.content) {
         editor.commands.setContent(selectedNote.content || '');
@@ -51,10 +70,16 @@ export function Editor() {
 
   const handleSave = useCallback(() => {
     if (editor && selectedNoteId && selectedNote) {
+      // 立即保存：清除 timer 并直接保存
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
       const content = editor.getHTML();
       if (content !== selectedNote.content) {
         updateNote(selectedNoteId, { content });
       }
+      setHasUnsaved(false);
     }
   }, [editor, selectedNoteId, selectedNote, updateNote]);
 
@@ -263,8 +288,8 @@ export function Editor() {
         <span className="word-count">
           {editor.storage.characterCount?.characters?.() || editor.getText().length} 字符
         </span>
-        <span className="save-status">
-          已保存
+        <span className={`save-status ${hasUnsaved ? 'unsaved' : ''}`}>
+          {hasUnsaved ? '未保存' : '已保存'}
         </span>
       </div>
     </div>
