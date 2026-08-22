@@ -21,10 +21,12 @@ updated: 2026-08-21
 | Hison unique brand 清单 | Hison | Amazon brand 清单已收到；先由 Brian 用 Diana 粗匹配，等 Hison unique brand 到位后由 AI 处理剩余异名；目标 8/24 Amazon 数据 ready | 2026-08-21 | ⏳ 等 unique brand，按 8/24 目标倒推 |
 | 图搜单站点试跑 | Jun Yaw Poon / Search 团队 | 取数链路 8/25 ready；8/26 准备输入；8/27 跑接口并核对结果映射；8/28 输出一个站点首轮结果 | 2026-08-28 | ⏳ 等开发完成 / 取数 ready / 联调 |
 | 图搜 result 对应关系确认 | Qu Yue / Hao Shen | ✅ 8/19 10:53 Hao Shen 回复：可以对应到具体竞品 item；除图片链接外，我们可提供更多竞品字段（如 item id、平台名），Hao Shen 会拼接 DC 回传结果 | — | ✅ 已闭环 8/19 |
+| 巴西税基变更 sign-off 未回复 | 产品/税务团队 / Amina / JH | 5 月底 local 请求修改巴西税基，会影响中国卖家账单；Brian 因忙巴西关税未问 JH，也不想先下结论（Amina 会要求给建议）。至今 local/PM/老板均未再催，但 Brian 担心秋后算账。 | — | ⏳ 冷处理，不主动提醒 |
 
 ## 变更记录
 
 - 2026-08-21：根据 `Amazon Data Plan` Row 2 整理 8 月 24 日周一核心确认项：BI/数据链路、DC 首批交付条件、Leah/CI item-level price 口径、Hison 数据传递、SLS prohibited category；明确 price 不属于 8 月 21 日到期项。
+- 2026-08-22 晚：新增冷处理等待项——巴西税基变更 sign-off（5 月底请求，Brian 未及时回复，对方至今未再催）；原则是不主动提起，若对方再催再确认细节与 JH 意见。
 - 2026-08-20：SLS 需求澄清——细粒度禁运产品 list 无法直接用于 SKU mapping，当前等待 category L1/L2/L3 或 global tree 维度的 `prohibited` 标签；供应商差异需等实际走货供应商确认。
 - 2026-08-20：Category 全量 Amazon→Shopee mapping 暂停；Hison category sample、竞对 mapping 参考和 v11 灰区优化不再主动跟进，仅保留 SLS US prohibited category 清单等待项。
 - 2026-08-20：新增 P0 等待项——Temu QC/取数链路、DC 多平台开发进度；图搜等待项改为 8/28 单站点首轮结果目标。
