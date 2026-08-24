@@ -3,7 +3,7 @@
 
 ---
 title: 项目清单
-updated: 2026-08-21
+updated: 2026-08-24
 ---
 
 # 项目清单
@@ -15,7 +15,7 @@ updated: 2026-08-21
 
 | 项目 | 状态 | 下一步行动 | 备注 |
 |------|------|-----------|------|
-| US 电商市场与 AI 商业化研究 | 进行中 | **当前 P0**：① 8/24 按 Amazon Data Plan Row 2 完成 BI/DC/Leah/Hison 核心确认；② 为 9/1 AMZ 站点匹配结果 presentation 倒排，8/28 冻结结果；③ Temu QC，问题当天同步 DC；④ 向 DC 询问 TTS/AE/Temu 进度；⑤ Category 只等待 SLS prohibited category 清单并建立最小 filter 表。 | 主项目；子项目 Annie 竞对图搜匹配（Amazon 3.4M + Temu 1M + TTS 1M + AE 1M + SHEIN 1M = 7.4M）；9/1 需向 Pine/JH/Annie present AMZ 站点匹配结果，8/29–8/31 预留 review/材料/修正；全量 Amazon→Shopee category mapping 已暂停；Amazon brand 中文名二次匹配已于 8/21 完成；Category 只服务于 US 禁运品剔除；8/24 项目内部 `Internal Kick off` 已约好；eBay 仅保留在将来/也许清单 |
+| US 电商市场与 AI 商业化研究 | 进行中 | **当前 P0**：① 收口 Amazon / 图搜数据链路，等待 Hison `Amazon selection` 底表和 Shen Hao 字段返回确认；② 为 9/1 AMZ 站点匹配结果 presentation 倒排，8/28 冻结结果；③ Category 只等待 SLS prohibited category 清单并建立最小 filter 表。Temu 仅保留 `brand_name` 字段确认；TTS / AE / SHEIN 平台事项后置。 | 主项目；子项目 Annie 竞对图搜匹配（Amazon 3.4M + Temu 1M + TTS 1M + AE 1M + SHEIN 1M = 7.4M）；9/1 需向 Pine/JH/Annie present AMZ 站点匹配结果，8/29–8/31 预留 review/材料/修正；全量 Amazon→Shopee category mapping 已暂停；Amazon brand 中文名二次匹配已于 8/21 完成；Category 只服务于 US 禁运品剔除；8/24 项目内部 `Internal Kick off` 已约好；eBay 仅保留在将来/也许清单 |
 | cross-border-ecommerce KB 维护 | 进行中 | 将 Temu 研究结论归仓到 cross-border-ecommerce KB | 支撑 US 研究的平台事实层；8/17 Temu 数据已核对完成，待归仓 |
 
 ## 已解决/已交付项目
@@ -36,6 +36,10 @@ updated: 2026-08-21
 
 ## 变更记录
 
+- **2026-08-24** | US Launch stakeholder 口径：Local team 与 Migoo 直接联系较少；Annie 为 owner/PMO，主要关注 product；有 concern 找 Camela；后期 run 起来后组织结构可能调整。
+- **2026-08-24** | US Launch 当前仍处于早期摸索阶段：先推进已知事项，9/1 JH / Annie 会议可能带来新的运营逻辑和调整；纯品类问题由 Lydia 跟进，机制/运营逻辑问题由 Siying 的 Project 跟进。
+- **2026-08-24** | 上午对齐后，Amazon / 图搜进入收口阶段：Brand 剩余匹配交 BPO 手动处理；确认 Amazon URL link 对应的 model 口径；收到 Shen Hao 返回清单后及时发出。当前整体风险可控，继续按图搜 8/25 开发完成、8/26 联调、8/27 凌晨首批匹配推进。
+- **2026-08-24** | Amazon price 口径确认：沿用 Shopee 逻辑取最低值；新增 `model_cnt`，后续比价按 model 拆分。主聚合之外需保留 model-level 明细或可重跑来源。
 - **2026-08-21** | 读取并纳入 `Amazon Data Plan` Row 2：8/24 先锁 BI/DC 数据链路与首批交付条件，问 Leah 确认 item-level price，和 Hison 对齐数据传递；8/25 再与 JH 确认首批 1–2 个站点。
 - **2026-08-20** | Category 全量 Amazon→Shopee mapping 暂停：当前只关注 US prohibited category；等待 SLS 权威清单，确认 ID/路径/适用范围/剔除规则后建立最小 filter 表。复杂 mapping、sample 验证、竞对做法调研和 v11 灰区优化均不再主动推进。
 - **2026-08-20** | 新增 Amazon 硬 deadline：9/1 向 Pine/JH/Annie present 站点匹配结果；8/28 冻结结果，8/29–8/31 预留内部 review、材料和修正。
