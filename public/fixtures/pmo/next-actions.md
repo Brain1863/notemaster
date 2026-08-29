@@ -3,7 +3,7 @@
 
 ---
 title: 下一步行动清单
-updated: 2026-08-24
+updated: 2026-08-29
 ---
 
 # 下一步行动清单
@@ -13,7 +13,41 @@ updated: 2026-08-24
 
 ## 关键依赖链
 
-> **Amazon selection 底表（Hison）** → 代表性 model / URL 核对（Brian）→ Shen Hao 衔接 DC → 图搜结果匹配表（Hison）→ score 阈值判定 → SLS prohibited category 过滤。上游未完成时，下游只做准备，不提前标记为完成。
+> **主链路**：Amazon selection 底表（Hison）→ 代表性 model / URL 核对（Brian）→ Shen Hao 衔接 DC → 图搜结果匹配表（Hison）→ score 阈值判定 → SLS prohibited category 过滤。**BR 分支**：Hison model-level sample → Brian 上传给 DC 侧 Pricing Center team → Quick Matching → item-level 结果 → 按 Amazon product/item 归集 → 正式数据匹配测试。上游未完成时，下游只做准备，不提前标记为完成。
+
+## 2026-08-29 当前快照
+
+- [ ] **P0：收口 Amazon 站点匹配结果**：MY、BR、PH 已完成；VN、TH 等待结果返回。结果到位后完成字段/数量/异常 review、`score → Y/N` 初判，并冻结 9/1 可展示版本【Brian / Hison / Shen Hao / DC】
+- [ ] **P0：下午催促联调 sample**：跟进 DC 联调结果 sample；BR 继续等待 Hison 提供 model-level sample，收到后上传 Pricing Center 进行正式数据匹配测试【Brian / Hison / DC Pricing Center team】
+- [ ] **P0：确认 Pricing Center 返回结果**：检查 Hison 收到的数字、字段完整性、model → item 归集和结果关联；数据更新已完成，不再重复记录为待办【Brian / Hison】
+- [ ] **P0：跟 Hison 对齐 score 分档与 Diana 底数**：从 `0.96` 起每隔 `0.005` 输出 CNCB + Live SKU 筛选后的 Amazon `product_id` 数量及留存率，并刷新 Diana 底数【Brian / Hison / Diana】
+- [ ] **P0：跟进 SLS prohibited category 清单**：原定 8/26 EOD 已逾期，今天确认 vendor 是否有回传；若仍无结果，明确可交付 ETA，并准备先跑数据、后置按 Shopee category 剔除的兜底路径【Brian / Michael Tang / SLS】
+- [ ] **P0：完成 9/1 Timeline / presentation 材料**：补齐 Amazon、Temu/TTS、AE 和 SHEIN→eBay 范围建议；Qynnie 为 9/1 汇报 PIC【Brian / Qynnie】
+
+> **范围判断**：SHEIN 当前爬虫不可行，建议用 eBay 替换；“third-largest player”与现有内部平台排名口径不一致，未核验前不作为已确认事实写入汇报。
+
+> 以下按日期分组的内容保留作历史记录，当前执行以本节快照为准。
+
+## 2026-08-27（周四）下午核心任务
+
+- [ ] **P0：Check Hison Pricing Center 数字**：核对 Pricing Center 返回结果的数量、字段完整性及基本结果状态，记录异常项【Brian / Hison】
+- [ ] **P0：跟进 Shen Hao 返回数字并推动 Hison 处理**：收到 Shen Hao 返回的数字后，及时转给 Hison 跟进，目标在今天 **16:00 前**完成确认或明确阻塞点【Brian / Shen Hao / Hison】
+- [ ] **P0：重新拉取 Amazon 热卖品 30%**：按当前筛选口径补拉约 30% Amazon 热卖商品，作为后续匹配/结果分析输入【Brian / Hison】
+- [ ] **P0：重新获取 Pricing Center model-level 数据**：补齐 model-level 输入/返回数据，供结果复核及后续按 item/product 归集【Brian / Hison / DC Pricing Center team】
+- [ ] **P0：完成图搜返回结果 test Y/N 内容**：结合实际返回 case 和 `score 0.95–0.96` 初始参考，确认哪些结果可判定为 `Y/N`，并记录仍需人工复核的边界 case【Brian / Hison / DC】
+
+## 2026-08-28（周五）今日核心任务
+
+- [ ] **P0：确认 Category 反向匹配结果**：核对现有反向匹配结果及异常项；先确认范围是否只服务 prohibited filter，不重新启动全量 Amazon → Shopee category mapping【Brian】
+- [ ] **P0：沟通后续 path 和所需支持**：对齐下一步执行路径、owner、接口/数据支持、资源和时间要求，形成明确的 support request【Brian / Siying / 相关 DC team】
+- [ ] **P0：跟进 PH 数据整合**：等 Shen Hao 链路 ready 后，再确认 PH 数据是否已返回、字段/关联键是否完整，以及后续由谁整合进结果底表【Brian / Shen Hao / Hison / DC】
+- [x] **P0：Pricing Center 数据更新**（✅ 已完成）：已在 thread 明确数据更新步骤，Hison 已按步骤更新正式数据；统一使用映射后的 model id，并保留原始 id ↔ 映射 id 对照表【Brian / Hison / DC Pricing Center team】
+- [ ] **P0：用正式数据完成 Pricing Center 匹配测试**：基于更新后的正式数据，验证 model-level 输入、item-level 返回、匹配结果质量和结果回查，不与前置的数据更新事项合并【Brian / Hison / DC Pricing Center team】
+- [ ] **P0：跟 Hison 对齐 score 分档结果**：从 `0.96` 起每隔 `0.005` 分档，补齐 CNCB + Live SKU 筛选后的 Amazon `product_id` 数量及对应留存率；留存率分母沿用当前已对齐的底数口径，如有歧义再单独确认【Brian / Hison】
+- [ ] **P0：刷新 Diana 底数**：基于 Hison 更新后的底表刷新 Diana 读取结果，并核对底数、筛选范围和字段状态【Hison / Diana / Brian】
+- [ ] **完成 Timeline PPT**：整理开发、联调、跑数、结果 review、prohibited category 过滤及汇报节点，形成下周二/9.1会议材料可用的 timeline 初稿【Brian / Qynnie】
+
+> **依赖说明**：PH 数据刷新暂不先做，等待 Shen Hao 链路 ready；Pricing Center 数据更新已完成，当前转入正式数据匹配测试。Hison 的 score 分档和 Diana 底数刷新是当前可直接推进的补数事项。
 
 ## 2026-08-24（周一）Amazon Data Plan 核心确认
 
@@ -23,11 +57,12 @@ updated: 2026-08-24
 - [x] **建立 Brand ingest tab**（✅ 8/24 已完成）：已建立 `To BI - Brand ingest` tab；Amazon 有但 Shopee 没有的品牌剔除，Amazon 与 Shopee 都有的品牌全部加入，供 BI 后续使用【Brian】
 - [x] **确认 Amazon image_url / URL 字段口径**（✅ 8/24 已向 Nikki 确认）：`offer_url`、`variant_image_url` 均为 model-level；Amazon 没有统一的 item-level 主图。因此每个 Amazon product 按 `sold_cnt` → `review_cnt` → `rating` → 随机选择一个 model，并用该 model URL 代表竞品 item URL【Brian】
 - [ ] **收到 Shen Hao 返回的图搜清单后发出**：先确认接收清单完整，再按已对齐的收件范围发送；在清单返回前保持等待，不提前标记完成【Brian】
-- [ ] **按 Hison 要求衔接两张图搜底表**：Hison 负责写入/维护 Hive 表；Diana 配置后直接读取 Hison 的表，完成底数和字段核验，不需要 Brian 另写 SQL。当前先等待第一张 `Amazon selection`——包含 Amazon product、代表性 model、model URL 和必要取数字段；图搜返回后的原始结果匹配表是下游产物，待 DC 返回后再由 Hison 承接。Shen Hao 负责 Hison ↔ DC 的接口衔接、输入输出和结果回传；原始结果与禁运过滤后的最终结果分开维护【Brian / Hison / Diana / Shen Hao】
+- [ ] **按 Hison 要求衔接两张图搜底表**：Hison 负责写入/维护 Hive 表；Diana 配置后直接读取 Hison 的表，完成底数和字段核验，不需要 Brian 另写 SQL。当前先等待第一张 `Amazon selection`——包含 Amazon product、代表性 model、model URL 和必要取数字段；图搜返回后的原始结果匹配表是下游产物，待 DC/Pricing Center team 返回后再由 Hison 承接。Shen Hao 负责 Hison ↔ DC 的接口衔接；BR 另走「Hison sample → Brian 上传给 DC 侧 Pricing Center team → Quick Matching」分支。原始结果与禁运过滤后的最终结果分开维护【Brian / Hison / Diana / Shen Hao / DC Pricing Center team】
 - [x] **已完成与 BI / Shen Hao 的初步数据链路确认**（✅ 8/24）：Shen Hao 已确认图片链接即可，具体交付形式可协商；当前继续等待字段返回边界和 Hison `Amazon selection` 底表【Brian / Shen Hao / Hison】
 - [ ] **确认 Amazon 底表在品牌剔除后是否仍满足 600 万+ 需求**：底表约 900 万+，目标需 600 万+，剔除部分品牌后需核对剩余量级；若已接近或不足 600 万， reconsider 是否还需继续加筛选条件【Brian】
 - [x] **已向 DC 发出图搜进度确认**（✅ 8/24 已发送并收到回复）：8 月 25 日开发完成，8 月 26 日联调，8 月 27 日凌晨进行第一批匹配；8 月 26 日 EOD 小范围 test 取决于联调情况，暂不承诺【Brian】
 - [ ] **联调后确认图搜输出 schema**：当前已知输入为 image bytes，输出为纯图召回的 `item_id` + `shop_id`；仍需补齐返回形式、每个 Amazon SKU 返回 1,000 个 item、score/参考标准和结果关联方式【Brian】
+- [ ] **P0：跟进 BR 图搜 sample / Pricing Center 匹配链路**：BR 由 DC 侧另一个具备 Pricing Center 能力的 team 承接，拟使用 `mpi.item.matching.get_matching_products_by_custom_fields`；等待 Hison 提供 model-level sample，并确认 DC Pricing Center team 的最终 QPS、资源和跑数时间。sample 到位后上传匹配，今天 review 返回结果、完成 test Y/N，并与 Hison 对齐后续处理方式【Brian / Hison / DC Pricing Center team】
 - [x] **确认 DC“一个商品内多个图片”的具体范围**（✅ 8/24 已确认）：DC 会匹配同一个 Shopee item 下的全部 model-level 图片/值，最终按 item-level 返回；Amazon 每个 product 只需选一个代表性 model，按 `sold_cnt` → `review_cnt` → `rating` → 随机的优先级选取，并用该 model URL 代表 Amazon item URL【Brian】
 - [x] **向 Feng Hao 确认图搜 score 阈值**（✅ 8/24 已完成）：历史经验参考为 `0.95–0.96`，可作为“大概率同款”的初始阈值；后续仍需结合实际 case 做校准，不能直接等同于绝对 `Y/N`【Brian / Feng Hao】
 - [ ] **结合首批 case 校准图搜 score → Y/N**：以 `0.95–0.96` 作为初始参考，抽查高于、接近和低于阈值的结果，确认是否需要调整【Brian / Hison / DC】
@@ -61,11 +96,12 @@ updated: 2026-08-24
 - [ ] **后置：复核 TTS ready 数据**：确认数据字段、量级、日期覆盖、图片和 brand/category 可用性，复核结果再决定是否进入主链路【Brian】
 - [ ] **后置：跟进 AE 爬虫进度**：预计 8 月底开发完成，随后开始爬虫，目标 2026 年 9 月 11 日上线；到节点后再确认实际数据可用时间【Brian / DC】
 - [ ] **后置：等待 JH 决策 SHEIN 是否必须推进**：当前爬虫风险和开发难度较高，未拿到 JH 决策前不投入额外分析或开发资源【Brian / JH】
-- [ ] **P0：倒排单站点图搜试跑**：8/27（周四）凌晨由 DC 跑匹配，8/27 白天拿到数据后立即检查输出与映射，8/28 完成一个站点的首轮结果，给 9/1 presentation 留出最小 review 时间【Brian】
+- [ ] **P0：倒排单站点图搜试跑**：非 BR 站点按 DC 的 8/27（周四）凌晨首批匹配时间线推进；BR 改走 Pricing Center Quick Matching，内部目标为 8/28（周五）先跑 300–400 万，整体 DDL 为 8/29（周六），但最终取决于 QPS/资源确认。拿到结果后立即检查输出与映射，给 9/1 presentation 留出 review 时间【Brian】
+- [ ] **P0：统一 BR 图搜量级口径**：确认“约 6M Amazon SKU”“约 4M item / 6M model”与旧规划“3.4M Amazon”的单位及筛选前后关系，再据此向 Pricing Center 申请 QPS/资源【Brian / Siying / Hison】
 - [x] **在内部群同步图搜 ETA / 接口方案，并补 cc 沈浩（Hao Shen）**（✅ 8/19 18:27 已发送）：说明 8/20 开发、预计 8/25 完成及后续联调安排【Brian】
 - [ ] **P0：配置 Diana 读取 Hison Amazon SKU selection Hive 底表并确认底数**：`review_cnt` 口径已确认；Diana 配置完成后核对底数、筛选量级和字段结果，确认后触发图搜输入准备【Brian / Hison / Diana】
 - [x] **用 Diana 对已收到的 Amazon brand 清单做第一轮粗匹配，并把结果更新到 Google Sheet**（✅ 8/19 完成）：https://docs.google.com/spreadsheets/d/10wJNzEzHW0BS2w8ddQX-ghMny2se36TGHCsXeTVeq2w/edit?gid=340434602#gid=340434602【Brian】
-- [ ] **P0：按新时间线准备 Amazon test handoff**：DC 8/27 凌晨跑匹配、8/27 白天拿到结果后立即进入检查，目标 8/28 前尽量冻结可向 Pine / JH / Annie 展示的首轮结果【Brian】
+- [ ] **P0：按站点路径准备 Amazon test handoff**：非 BR 站点按 DC 8/27 凌晨跑匹配、白天拿结果；BR 先完成 Pricing Center sample，再按约 4M item / 6M model 规模跑数。收到各自结果后立即检查，目标尽快冻结可向 Pine / JH / Annie 展示的首轮结果【Brian】
 - [ ] **8/25 和 JH 确认优先跑哪 1–2 个站点**：根据数据量、接口准备度和 9 月 1 日汇报要求锁定首批站点【Brian】
 - [ ] **筛选逻辑确认后，向数据侧发 Amazon 最新底表刷新请求并确认完成时间**【Brian】
 - [ ] **Brand 中文名二次匹配留痕**：保留中文原名、英文标准名、Amazon 命中名和置信度，作为上午主任务的输出字段【Brian/Mason】
@@ -92,6 +128,10 @@ updated: 2026-08-24
 ## 变更记录
 
 - 2026-08-24：Amazon 取数字段和图搜时间线更新——`review_cnt` 已确认；同一 `product_id` 无差异直接取值，有差异按 `sold_cnt` 加权，无 `sold_cnt` 算术平均。8/25 DC 开发完成、8/26 API 联调、8/27 凌晨匹配，8/27 白天数据可用，取代原 8/25 data ready 目标。
+- 2026-08-26：BR 图搜路径调整——DC 当前没有 BR 图搜能力，已转找 CSPU team；BR 改为等待 Hison 提供 sample，Brian 上传后由 CSPU 匹配。下午跟进 Hison sample 和 CSPU 承接进度；非 BR 站点仍按 DC 原时间线推进。
+- 2026-08-26：BR 图搜进一步改走 Pricing Center / Quick Matching；BR 有现成 PC 站点支持，拟使用 `mpi.item.matching.get_matching_products_by_custom_fields`。由于当前只能匹配 Shopee item 图，需将约 4M item 下的约 6M Amazon model 全部跑一遍；内部目标 8/28 先完成 300–400 万，整体 DDL 为 8/29。最终 QPS/资源、`model_id` 作为 Product ID 的可用性仍待确认。
+- 2026-08-26：责任归属修正——Pricing Center 不是独立外部团队，而是 DC 侧另一个 team 使用的匹配能力；BR 的承接 owner 记录为 DC Pricing Center team。
+- 2026-08-26：明确 8/27 核心工作——分别 review DC 图搜返回结果和 DC Pricing Center 返回结果；Pricing Center 结果需与 Hison 对齐接收、落表、归集、去重及后续处理口径。
 - 2026-08-24：SLS 禁运/禁售 category 成为数据启动前置——今天先问进展；无明确结果则追实际供应商 ETA。内部 DDL 为 8/26（周三），8/27（周四）开始拿数据；若清单不能按时到位，需提前切换到后置剔除方案并同步 Siying。
 - 2026-08-20：SLS 沟通口径确认——当前需要的是 SHP category tree 维度的 US `prohibited` 标签，用于 SHP SKU mapping；供应商具体禁运产品清单只能作参考，不能直接作为交付。理想周一、最晚下周二拿到品类表维度结果；IP/假货将进入黑名单 category，后续可能单独发起美国假货清理 initiative。
 - 2026-08-20：Category 全量 Amazon→Shopee mapping 暂停。后续只围绕 US prohibited category：等待 SLS 权威清单，确认 ID/路径/适用范围/剔除规则，建立最小 filter 表；Amazon/Shopee sample、竞对 mapping 调研、v3.5 全量候选池和灰区优化均不再主动推进。
