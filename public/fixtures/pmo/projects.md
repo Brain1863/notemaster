@@ -3,7 +3,7 @@
 
 ---
 title: 项目清单
-updated: 2026-08-29
+updated: 2026-08-30
 ---
 
 # 项目清单
@@ -15,8 +15,8 @@ updated: 2026-08-29
 
 | 项目 | 状态 | 下一步行动 | 备注 |
 |------|------|-----------|------|
-| US 电商市场与 AI 商业化研究 | 进行中 | **当前 P0**：① Amazon MY/BR/PH matching 已完成，VN/TH 等待结果返回；② 下午催 DC 联调 sample，BR 等 Hison model-level sample 后上传 Pricing Center，进入正式匹配测试；③ Hison 补齐 score 分档、留存率与 Diana 底数；④ 跟进逾期的 SLS prohibited category 清单；⑤ 完成 9/1 Timeline / presentation 材料。Temu/TTS 排在 Amazon matching 后；AE 仍在开发；SHEIN 爬虫不可行，建议以 eBay 替换，待 owner/JH 确认。 | 主项目；子项目 Annie 竞对图搜匹配。BR 约 4M item / 6M model 仍需按实际筛选 scope 管理；Hison、Diana、Shen Hao、DC 的输入/输出是关联链路；全量 Amazon→Shopee category mapping 已暂停，Category 只服务 US 禁运品剔除；Qynnie 为 9/1 汇报 PIC |
-| cross-border-ecommerce KB 维护 | 进行中 | 将 Temu 研究结论归仓到 cross-border-ecommerce KB | 支撑 US 研究的平台事实层；8/17 Temu 数据已核对完成，待归仓 |
+| US 电商市场与 AI 商业化研究 | 进行中 | **当前 P0**：① Amazon MY/BR/PH matching 已完成，VN/TH 等待结果返回；② 非 BR 等 DC 联调 sample，BR Pricing Center 数据更新已完成，待正式匹配测试和结果 review；③ Hison 补齐 score 分档、留存率、Diana 底数及 Amazon selection 底表；④ 继续跟进 SLS prohibited category 清单；⑤ 收口 9/1 Timeline / presentation。Temu/TTS 排在 Amazon matching 后；AE 仍在开发；SHEIN 爬虫不可行，建议以 eBay 替换，待 owner/JH 确认。 | 主项目；子项目 Annie 竞对图搜匹配。BR 约 4M item / 6M model 仍需按实际筛选 scope 管理；Hison、Diana、Shen Hao、DC 的输入/输出是关联链路；全量 Amazon→Shopee category mapping 已暂停，Category 只服务 US 禁运品剔除；Qynnie 为 9/1 汇报 PIC |
+| cross-border-ecommerce KB 维护 | 后置 | 确认 Temu `brand_name` 字段后，再归档最终平台事实 | 支撑 US 研究的平台事实层；Temu QC/取数沟通已完成，当前不抢 Amazon/图搜主线资源 |
 
 ## 已解决/已交付项目
 

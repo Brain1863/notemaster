@@ -3,7 +3,7 @@
 
 ---
 title: 下一步行动清单
-updated: 2026-08-29
+updated: 2026-08-30
 ---
 
 # 下一步行动清单
@@ -15,14 +15,14 @@ updated: 2026-08-29
 
 > **主链路**：Amazon selection 底表（Hison）→ 代表性 model / URL 核对（Brian）→ Shen Hao 衔接 DC → 图搜结果匹配表（Hison）→ score 阈值判定 → SLS prohibited category 过滤。**BR 分支**：Hison model-level sample → Brian 上传给 DC 侧 Pricing Center team → Quick Matching → item-level 结果 → 按 Amazon product/item 归集 → 正式数据匹配测试。上游未完成时，下游只做准备，不提前标记为完成。
 
-## 2026-08-29 当前快照
+## 2026-08-30 当前快照
 
 - [ ] **P0：收口 Amazon 站点匹配结果**：MY、BR、PH 已完成；VN、TH 等待结果返回。结果到位后完成字段/数量/异常 review、`score → Y/N` 初判，并冻结 9/1 可展示版本【Brian / Hison / Shen Hao / DC】
-- [ ] **P0：下午催促联调 sample**：跟进 DC 联调结果 sample；BR 继续等待 Hison 提供 model-level sample，收到后上传 Pricing Center 进行正式数据匹配测试【Brian / Hison / DC Pricing Center team】
-- [ ] **P0：确认 Pricing Center 返回结果**：检查 Hison 收到的数字、字段完整性、model → item 归集和结果关联；数据更新已完成，不再重复记录为待办【Brian / Hison】
+- [ ] **P0：催 DC 联调 sample 并 review**：跟进非 BR 图搜联调 sample；收到后检查返回字段、数量、结果关联和 test Y/N。BR 独立走 Pricing Center 正式匹配测试，不与标准 DC sample 混记【Brian / Shen Hao / DC / DC Pricing Center team】
+- [ ] **P0：完成 BR Pricing Center 正式匹配测试**：数据更新已完成；基于 model-level 输入和映射后 model id，验证 item-level 返回、model → item/product 归集、结果质量及回查，并与 Hison 对齐落表处理方式【Brian / Hison / DC Pricing Center team】
 - [ ] **P0：跟 Hison 对齐 score 分档与 Diana 底数**：从 `0.96` 起每隔 `0.005` 输出 CNCB + Live SKU 筛选后的 Amazon `product_id` 数量及留存率，并刷新 Diana 底数【Brian / Hison / Diana】
-- [ ] **P0：跟进 SLS prohibited category 清单**：原定 8/26 EOD 已逾期，今天确认 vendor 是否有回传；若仍无结果，明确可交付 ETA，并准备先跑数据、后置按 Shopee category 剔除的兜底路径【Brian / Michael Tang / SLS】
-- [ ] **P0：完成 9/1 Timeline / presentation 材料**：补齐 Amazon、Temu/TTS、AE 和 SHEIN→eBay 范围建议；Qynnie 为 9/1 汇报 PIC【Brian / Qynnie】
+- [ ] **P0：跟进 SLS prohibited category 清单**：供应商回复仍未闭环；确认最新 ETA。拿到后直接复用已有 category mapping 做后置剔除，无法对应的少量异常项再人工澄清【Brian / Michael Tang / SLS】
+- [ ] **P0：收口 9/1 Timeline / presentation 材料**：平台进度、Amazon MY/BR/PH 完成与 VN/TH 等待、Temu/TTS 后置、AE 开发、SHEIN→eBay 建议已形成；完成最终版和 Qynnie 对接【Brian / Qynnie】
 
 > **范围判断**：SHEIN 当前爬虫不可行，建议用 eBay 替换；“third-largest player”与现有内部平台排名口径不一致，未核验前不作为已确认事实写入汇报。
 

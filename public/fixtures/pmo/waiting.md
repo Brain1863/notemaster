@@ -3,7 +3,7 @@
 
 ---
 title: 等待清单
-updated: 2026-08-29
+updated: 2026-08-30
 ---
 
 # 等待清单
@@ -15,13 +15,13 @@ updated: 2026-08-29
 | Temu `brand_name` 字段确认 | Hison / DC | Temu QC / 取数沟通已完成，当前只需确认底表是否包含 `brand_name`；若没有，再确认替代字段或补充方式 | — | ⏳ 非当前主线，等待字段确认 |
 | TTS ready 数据复核（后置） | DC / Brian | TTS 已 ready；后续复核字段、量级、日期覆盖、图片和 brand/category 可用性，确认是否进入主链路 | — | ⏸ 后置，等待我们复核 |
 | AE 爬虫进度（后置） | DC / Leah | 预计 8 月底开发完成，随后开始爬虫，目标 2026 年 9 月 11 日上线；到节点后确认实际数据可用时间 | 2026-08-31 | ⏸ 后置，等待开发完成 |
-| Amazon VN / TH 匹配结果 | Shen Hao / DC | MY、BR、PH 已完成；VN、TH 等待结果返回。结果到位后核对数量、字段和异常，并纳入 9/1 汇报版本 | 2026-08-29 | ⏳ 等结果返回 |
+| Amazon VN / TH 匹配结果 | Shen Hao / DC | MY、BR、PH 已完成；VN、TH 等待结果返回。结果到位后核对数量、字段和异常，并纳入 9/1 汇报版本 | 2026-08-30 | ⏳ 等结果返回 |
 | SHEIN 是否推进（后置） | JH / 项目 owner | SHEIN 爬虫当前不可行，项目建议改用 eBay；等待 owner/JH 确认是否替换及最终范围 | — | ⚠️ 后置，范围决策待确认 |
-| SLS US prohibited category 清单 | Michael Tang / SLS team / 实际走货供应商 | 需要 SHP category tree 维度的 US `prohibited` 标签，用于 SHP SKU mapping；原定 8/26 EOD 已逾期，需今天确认 vendor 是否已回复及新的明确 ETA；若继续延迟，走“先跑数据、后置按 Shopee category 剔除”兜底 | 2026-08-29 | 🔴 P0，逾期，今天必须重新跟催 |
+| SLS US prohibited category 清单 | Michael Tang / SLS team / 实际走货供应商 | 需要 SHP category tree 维度的 US `prohibited` 标签，用于结果后处理；原定 8/26 EOD 已逾期，供应商仍未闭环，需确认新的明确 ETA；若继续延迟，走“先保留原始结果、后置按 Shopee category 剔除”兜底 | 2026-08-30 | 🔴 P0，逾期，继续跟催 |
 | Hison 拉数（category 匹配素材） | Hison | ① unique category 已发（8/18 11:01，Hison 已确认）；② 追加 Amazon / Shopee 双方 category sample；因全量 mapping 已暂停，sample 验证暂不使用 | — | ⏸ 已暂停，不再跟催 |
 | Hison Amazon SKU selection 底表 | Hison → Diana | Hison 负责写入/维护 Hive 底表；取数字段、price 和代表性 model / URL 口径已对齐：无差异直接取值，有差异按 sold_cnt 加权，无 sold_cnt 算术平均；price 取最低值；model 按 `sold_cnt` → `review_cnt` → `rating` → 随机选择。底表提供后由 Diana 配置读取并完成底数、字段和量级核验 | — | ⏳ 当前前置依赖，等待 Hison 提供底表 |
 | Hison unique brand 清单 | Hison | 当前 Brand 交付已通过 BPO 人工复核和 `To BI - Brand ingest` tab 完成，Hison unique brand 不再是当前交付前置；如后续要做更多异名扩展，再重新激活 | — | ⏸ 当前不再等待，已被人工复核路径替代 |
-| 图搜开发、联调与首批匹配 | Chen Sinuo / Danping Wu / Jun Yaw Poon / DC Pricing Center team | 非 BR 路径按开发/联调后返回结果推进；BR 由 DC 侧另一个具备 Pricing Center 能力的 team 承接。当前下午催联调 sample，并分别 review DC 图搜结果和 Pricing Center 结果 | 2026-08-29 下午 | ⚠️ 等待联调 sample / 结果收口 |
+| 图搜开发、联调与首批匹配 | Chen Sinuo / Danping Wu / Jun Yaw Poon / DC Pricing Center team | 非 BR 路径等待联调 sample；BR 由 DC 侧另一个具备 Pricing Center 能力的 team 承接。需要分别 review DC 图搜结果和 Pricing Center 结果 | 2026-08-30 | ⚠️ 等待 sample / 结果收口 |
 | 图搜接口输入输出 schema | Hao Shen / Jun Yaw Poon / Feng Hao / Qu Yue | Shen Hao 负责衔接 Hison 与 DC 的接口链路；当前确认输入为图片字节流，输出为纯图召回的 `item_id` + `shop_id`；仍需确认 Hive/interface 交付形式、每个 Amazon SKU 返回 1,000 个 item、score/参考标准和结果关联键 | 2026-08-26 | ⏳ 待补齐，影响联调和结果验收 |
 | 图搜图片匹配粒度 | Feng Hao / Jun Yaw Poon / DC / Nikki | ✅ 已确认：同一个 Shopee item 下的全部 model-level 图片/值都会参与匹配，最终按 item-level 返回；Amazon 每个 product 只需选择一个代表性 model（`sold_cnt` → `review_cnt` → `rating` → 随机）作为输入并用其 URL 代表 Amazon item URL。Nikki 已确认 `offer_url`、`variant_image_url` 均为 model-level，Amazon 没有统一的 item-level 主图 | — | ✅ 已闭环，不再等待 |
 | 图搜 score 分档与留存率 | Hison / Brian | 从 `0.96` 起每隔 `0.005` 分档，补齐 CNCB + Live SKU 筛选后的 Amazon `product_id` 数量及对应留存率；底数/留存率分母沿用当前已对齐口径，如有歧义再确认 | 2026-08-28 | ⏳ 等 Hison 补数 |
@@ -31,7 +31,7 @@ updated: 2026-08-29
 | 9/1 会议材料：爬虫结果 / NFR / counterfeit | Qynnie / Siying / 相关数据与运营团队 | Qynnie 是 9/1 汇报 PIC，负责统筹材料和模块衔接；爬虫结果是其中一个材料模块。NFR 和 counterfeit 需在 8/25 上午确认定义、数据来源、是否可补及替代呈现方式 | 2026-08-25 上午 | ⏳ Kickoff 已完成，Qynnie 汇报 PIC 已明确，指标口径待确认 |
 | 图搜结果 prohibited category 后处理 | SLS team / Lydia / Hison | DC 原始结果复用现有 Shopee category mapping，与 SLS US prohibited 清单做 join 并剔除；已有 mapping 能匹配的部分不重复人工处理。仅当 SLS 清单本身无法对应现有 Shopee category tree 时，才澄清异常项。原始结果保留，过滤后另产最终结果 | 2026-08-27 结果返回后 | ⏳ 依赖 SLS 清单，主流程不新增通用人工 mapping |
 | Hison 图搜结果匹配表（下游） | Hison / Shen Hao / DC | 依赖 Hison 先提供 `Amazon selection` Hive 底表，并由 Diana 完成底数/字段核验；DC 返回后再承接 Amazon product 与 Shopee item 的原始召回结果、`score/value`、匹配状态及后续 Y/N 判定字段。原始结果与禁运过滤后的最终结果分开维护 | 2026-08-27 首批匹配后 | ⏳ 下游等待，不能早于 Amazon selection 和 DC 首批结果 |
-| BR 图搜 Pricing Center 链路准备 | Hison / DC Pricing Center team（Yu Fan / Xitong / Lin / Kyle / Yumou） | BR 由 DC 侧另一个具备 Pricing Center 能力的 team 承接，拟使用 `mpi.item.matching.get_matching_products_by_custom_fields`；数据更新已完成，当前等待 Hison model-level sample，收到后上传并开展正式数据匹配测试 | 2026-08-29 | ⏳ 等 Hison sample，下午跟进 |
+| BR 图搜 Pricing Center 链路准备 | Hison / DC Pricing Center team（Yu Fan / Xitong / Lin / Kyle / Yumou） | BR 由 DC 侧另一个具备 Pricing Center 能力的 team 承接，拟使用 `mpi.item.matching.get_matching_products_by_custom_fields`；正式数据更新已完成，待 model-level sample/输入准备完成后开展正式匹配测试，并核对 item-level 返回和归集 | 2026-08-30 | ⏳ 等 sample / 正式测试结果 |
 | BR Quick Matching 输入 ID 口径 | DC Pricing Center team | 确认 Quick Matching 的 Product ID 是否可以填 Amazon `model_id`，以及系统是否校验 ID 类型，还是仅将其作为结果标识符返回 | 2026-08-26 | ⏳ 待 DC Pricing Center team 确认 |
 | BR 图搜匹配粒度风险 | DC Pricing Center team / Hison / Siying | Quick Matching 当前回复为只能匹配 Shopee item 图，不能匹配 item 下的 model 图；因此需把每个 Amazon item 下的 model 都作为输入，预计约 4M item、6M model，最终按 Amazon product/item 归集。结果质量放到正式数据匹配测试中验证 | 2026-08-26 下午 | ⚠️ 方案已切换，等待正式数据测试 |
 | BR 图搜量级口径 | Siying / Hison / Brian | 沟通中同时出现约 6M Amazon SKU、约 4M item、约 6M model，以及项目旧规划中的 3.4M Amazon 量级；需确认各数字的单位、筛选前后关系及本次 Pricing Center 实际跑数 scope | 2026-08-26 | ⚠️ 量级未完全统一，影响 QPS/资源申请 |
@@ -39,7 +39,7 @@ updated: 2026-08-29
 | 后续 path 与 support 对齐 | Siying / 相关 DC team | 对齐下一步路径、owner、接口/数据支持、资源和时间要求，形成明确 support request | 2026-08-28 | ⏳ 今日沟通 |
 | PH 数据整合 | Shen Hao / Hison / DC | 等 Shen Hao 链路 ready 后，再确认 PH 数据返回状态、字段/关联键完整性及整合进结果底表的责任边界 | Shen Hao ready 后 | ⏸ 前置链路未 ready，暂不刷新 |
 | Pricing Center 数据更新 | Brian / Hison / DC Pricing Center team | 已在 thread 明确输入映射、返回、落表和归集步骤，Hison 已按步骤更新正式数据；统一使用映射后的 model id，并保留原始 id ↔ 映射 id 对照表 | — | ✅ 已完成，进入正式数据匹配测试 |
-| Pricing Center 正式数据匹配测试 | Brian / Hison / DC Pricing Center team | 基于已更新的正式数据，验证 model-level 输入、item-level 返回、匹配结果质量和结果回查；该事项不是 sample 数据测试 | 2026-08-28 | ⏳ 已具备执行条件，待开展 |
+| Pricing Center 正式数据匹配测试 | Brian / Hison / DC Pricing Center team | 基于已更新的正式数据，验证 model-level 输入、item-level 返回、匹配结果质量和结果回查；该事项不是前置数据更新，也不是仅打通代码的 sample 测试 | 2026-08-30 | ⏳ 待开展/收结果 |
 | Timeline PPT | Brian / Qynnie | 整理开发、联调、跑数、结果 review、prohibited category 过滤及汇报节点，形成下周二/9.1会议可用的 timeline 初稿 | 2026-08-28 | ⏳ 待完成初稿 |
 | 巴西税基变更 sign-off 未回复 | 产品/税务团队 / Amina / JH | 5 月底 local 请求修改巴西税基，会影响中国卖家账单；Brian 因忙巴西关税未问 JH，也不想先下结论（Amina 会要求给建议）。至今 local/PM/老板均未再催，但 Brian 担心秋后算账。 | — | ⏳ 冷处理，不主动提醒 |
 
