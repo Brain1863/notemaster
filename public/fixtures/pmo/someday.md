@@ -3,7 +3,7 @@
 
 ---
 title: 将来/也许清单
-updated: 2026-08-19
+updated: 2026-09-04
 ---
 
 # 将来/也许清单
@@ -12,9 +12,10 @@ updated: 2026-08-19
 
 | 想法 | 可能的触发条件 | 备注 |
 |------|--------------|------|
-| eBay 匹配 | eBay matching 需求被正式提出并确认启动 | 当前仅为 hypothesis，不进入激活项目或本周行动清单 |
+| eBay 匹配（已激活） | Nikki 确认刷数/数据 ready 后启动 matching | 已转入 US 项目当前跟进；此处仅保留从 hypothesis 激活的历史记录 |
 
 ## 变更记录
 
 - 2026-08-16: 初始骨架创建
 - 2026-08-19: 新增 eBay matching hypothesis；等待需求正式启动后再评估是否激活
+- 2026-09-04: eBay 已进入当前 crawler / matching 计划，具体 refresh 排期由 Nikki 确认；主行动见 `lists/next-actions.md`。

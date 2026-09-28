@@ -3,7 +3,7 @@
 
 ---
 title: 下一步行动清单
-updated: 2026-08-30
+updated: 2026-09-24
 ---
 
 # 下一步行动清单
@@ -15,18 +15,43 @@ updated: 2026-08-30
 
 > **主链路**：Amazon selection 底表（Hison）→ 代表性 model / URL 核对（Brian）→ Shen Hao 衔接 DC → 图搜结果匹配表（Hison）→ score 阈值判定 → SLS prohibited category 过滤。**BR 分支**：Hison model-level sample → Brian 上传给 DC 侧 Pricing Center team → Quick Matching → item-level 结果 → 按 Amazon product/item 归集 → 正式数据匹配测试。上游未完成时，下游只做准备，不提前标记为完成。
 
-## 2026-08-30 当前快照
+## 2026-09-24（重新基线）
 
-- [ ] **P0：收口 Amazon 站点匹配结果**：MY、BR、PH 已完成；VN、TH 等待结果返回。结果到位后完成字段/数量/异常 review、`score → Y/N` 初判，并冻结 9/1 可展示版本【Brian / Hison / Shen Hao / DC】
-- [ ] **P0：催 DC 联调 sample 并 review**：跟进非 BR 图搜联调 sample；收到后检查返回字段、数量、结果关联和 test Y/N。BR 独立走 Pricing Center 正式匹配测试，不与标准 DC sample 混记【Brian / Shen Hao / DC / DC Pricing Center team】
-- [ ] **P0：完成 BR Pricing Center 正式匹配测试**：数据更新已完成；基于 model-level 输入和映射后 model id，验证 item-level 返回、model → item/product 归集、结果质量及回查，并与 Hison 对齐落表处理方式【Brian / Hison / DC Pricing Center team】
-- [ ] **P0：跟 Hison 对齐 score 分档与 Diana 底数**：从 `0.96` 起每隔 `0.005` 输出 CNCB + Live SKU 筛选后的 Amazon `product_id` 数量及留存率，并刷新 Diana 底数【Brian / Hison / Diana】
-- [ ] **P0：跟进 SLS prohibited category 清单**：供应商回复仍未闭环；确认最新 ETA。拿到后直接复用已有 category mapping 做后置剔除，无法对应的少量异常项再人工澄清【Brian / Michael Tang / SLS】
-- [ ] **P0：收口 9/1 Timeline / presentation 材料**：平台进度、Amazon MY/BR/PH 完成与 VN/TH 等待、Temu/TTS 后置、AE 开发、SHEIN→eBay 建议已形成；完成最终版和 Qynnie 对接【Brian / Qynnie】
+- [ ] **P0：验收 AE 输出，而非只看 match 数**：请 Hison 按 Qynnie 模板输出；区分图搜候选、严格 1:1 pair 和最终可用结果，核对 5 个未映射 AE category ID（170 items）是否仍为异常。图片 score 阈值、唯一性和业务同款准确率分别验收【Brian / Hison / DC / Qynnie】
+- [ ] **P0：核对 TTS Pricing Center 正式状态**：每个批次均以 `Job ID + Batch ID` 查询接收数、Matching/Completed 状态、结果量和失败回执；对 `20260914001` 的本地 206,046 vs 页面 206,045 差异单独留痕。match coverage 只代表系统召回/匹配覆盖，不等同视觉同款准确率【Brian / Hison / Xiao / Pricing Center】
+- [ ] **P1：推进 eBay 数据可用性**：向 Nikki/DC 确认 Hive、vendor delivery ETA、`sold_cnt` 的 region/刷新语义，以及 model-level price 明细的独立落表；Hive ready 后再交 Shen Hao 触发 matching【Brian / Nikki / DC / Shen Hao】
+- [ ] **P1：收口 KRCB 输出格式**：由业务侧确认平台/站点/Cluster 粒度、active-only 或全量、matched/unmatched 范围、KPI 汇总或行级明细；确认后再将现有 Amazon/Temu/TTS 结果映射为正式版【Brian / KRCB stakeholders】
+
+## 2026-09-11（周五）待执行
+
+### A. 数据质量与数据口径
+
+- [ ] **P0：修复并验收 AE / SCS / Lovito 严格 1:1 结果**：9/3 的 TTS/AE 去重产物为 38,460 对；SCS/Lovito 现有 `1to1` 工作簿只保证 MT SKU 唯一，不能作为最终结果。改用 maximum matching 重导出 SCS 39,607 对、Lovito 4,130 对，验证 Amazon item 与 MT SKU 均唯一，并处理 `#N/A` URL 后再交付【Brian / AE data owner】
+- [ ] **P0：Review AE 返回结果与图搜结果**：等待 AE 匹配结果返回；到位后核查覆盖、字段、异常 case 与差异原因，并 review 图搜匹配结果。仍按 `AE Category ID` bridge 关联，5 个未匹配 ID（170 items）保留异常队列，不猜测补齐【Brian / Hison / DC】
+
+### B. 竞对数据与 matching 链路
+
+- [ ] **P1：沉淀 Temu 与 AE 差异原因**：今天已完成初步盘点；Temu 侧主要看品类结构（尤其 Apparel/Fashion）、禁运/可售池约束，以及图片表现与阈值影响。AE 侧的 category ID 映射和反爬字段限制需单独列示，暂不将两边差异归因到单一因素【Brian】
+- [ ] **P0：跟进 TTS Pricing Center 上传状态**：第二轮失败重传 part 1=`20260914001` 当前为 `In Progress 0/206045`，part 2=`20260914002` 当前为 `Pending`。part 1 本地文件为 206,046 条，页面少 1 条；状态推进后先核对 Data Upload 最终接收数，再确认对应 Quick Matching Job、结果量和失败回执，并继续留痕 category、price 字段和粒度【Brian / Hison / Xiao / DC Pricing Center team】
+- [ ] **P0：跟催 eBay 进度并打通 Hive → 沈浩交接**：9 月 11 日向 Nikki/DC 跟催；目标拿到 Hive 表、确认数据可用后交沈浩以触发后续 matching。并继续确认数据完成时间、免重爬可行性、新 Ceno competitor 信息、`sold_cnt` region/刷新语义【Brian / Nikki / DC / Shen Hao】
+- [ ] **P1：确认 eBay variant/model-level price 的独立落表方案**：已确认 `variants` 可解析 `variant_id + price`；本次 item-level 主表可保留一个代表性 price，但需另存 `item_id/offer_id + variant_id/model_id + price + currency + crawl_ts` 明细供 BI 后续取最低价/均价。向 Nikki / DE 确认 Hive/DWD 承载位置和交付时间，不将附加数组直接覆盖一行一个 offer 的主表【Brian / Nikki / Zhou Hao / Tian Kang】
+- [ ] **P1：校准 Temu 当前结果**：基于 1,154,052 total、479,650 matched（41.56%）核对 category 和跨站点 Total/union；按 Cluster 抽 case 校准 score，不能仅凭整体阈值直接定 Y/N【Brian / Hison / Diana】
+- [ ] **P1：校准 crawler 实际交付时间线**：当前计划为 Amazon 9/3、Temu 9/11、AE 9/16、TikTok Shop 9/18、eBay 9/24；逐一确认实际 ready 状态、量级、owner 和 matching 触发条件，Amazon 计划日已过【Brian / DC / 各平台 owner】
+- [ ] **P1：重收口 Amazon / DC / Pricing Center 历史依赖**：确认 Amazon 站点结果、图搜 sample / 接口 schema、Pricing Center 正式测试、score 分档与 Diana 底数的最新实际状态；旧 8 月 DDL 只作背景，不默认仍有效【Brian / Hison / Shen Hao / DC】
+
+### C. Launch 准备（并行但不抢 P0）
+
+- [ ] **P1：补齐 BD plan crawler workstream 与 onboarding target**：明确各平台 crawler 范围、owner、ready 节点、matching 依赖；同时明确 1P onboarding target 的口径、阶段和负责人【Brian / DC / Product / Ops】
+- [ ] **P1：准备 KR kickoff**：与 Ray Wang 对齐 Ops readiness，并确认是否可先做小规模 testing；testing 可行性是主要风险【Brian / Ray Wang / KR Ops】
+- [ ] **P1：收口 1P / Ops kickoff 输入**：产品侧问题由 Lydia 跟进；Ops 需明确 1P onboarding 系统 setup、listing 要求和负责人；counterfeit 严格 screening 需 BI 资源/成本评估，并由 Robin / Rod 参与确认【Brian / Lydia / Ops / BI / Robin / Rod】
+- [ ] **P1：与 Migoo team 对齐 listing 输入**：确认 listing name、文案/属性表达及必要描述字段，形成可执行的 listing input 清单【Brian / Migoo team】
+- [ ] **P1：小幅更新 deck**：基于上述确认完成必要修改，供 **9 月 16 日 Chris meeting** 使用【Brian】
+- [ ] **P2：等待 Migoo 后续开发后推进 Explore**：后续讨论站内承接方式及 Migoo 导流机制；当前保留议题，不提前设计方案或承诺时间【Brian / Migoo team】
+- [ ] **P2：收口 SLS prohibited category 与 9/1 汇报遗留项**：确认 SLS 清单和 9/1 汇报是否新增实际 action；未确认前保留原始图搜结果，禁运过滤不覆盖原始结果【Brian / Michael Tang / SLS / Qynnie】
 
 > **范围判断**：SHEIN 当前爬虫不可行，建议用 eBay 替换；“third-largest player”与现有内部平台排名口径不一致，未核验前不作为已确认事实写入汇报。
 
-> 以下按日期分组的内容保留作历史记录，当前执行以本节快照为准。
+> 以下按日期分组的内容保留作历史记录，当前执行以本节为准。
 
 ## 2026-08-27（周四）下午核心任务
 
@@ -191,3 +216,5 @@ updated: 2026-08-30
 - 2026-08-16: 并入另一 task 更新（Hison 更新 UST tracker 数字 / 查看 Temu 上周数字）；补回底表审批优先项
 - 2026-08-16: 填入首次大脑清空内容：5 条下一步行动（2 深度 / 3 普通 / 3 Mason）
 - 2026-08-16: 初始骨架创建
+- 2026-09-28: 【满洲里采购】给 Amina + Siying 买感谢伴手礼（nomination 帮大忙），预算 150-250/人，两人都送。推荐组合：俄货零食（大头娃娃巧克力+紫皮糖+威化）+ 精致小套娃；采购点首选中俄互市贸易区（身份证进），备选大山俄货。注意：路边摊假货多；俄式提拉米苏保质期太短别送人；不送酒。
+- 2026-09-28: 【全程顺手】其余同事（含 Siying，她在上海也参与盲抽）：特色冰箱贴共买 12 个**完全不同类型**（同地可买多款但款式不重复；每到一个有意思的地方挑），回沪装不透明袋子全组盲抽【进度 2/12：阿尔山陶瓷漫画×1 + 鹿角彩绘×1 已入袋；另同款各 1 个 Brian 自留收藏】，回沪装不透明袋子全组盲抽。规则：树脂/木质耐摔款；每个贴记住来源地；抽前先剔除瑕疵款；剩余 1-2 个指定给帮过忙的人。Amina 是否为老板身份待确认（影响档位分配）。

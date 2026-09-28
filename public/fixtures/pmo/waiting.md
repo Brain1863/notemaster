@@ -3,15 +3,42 @@
 
 ---
 title: 等待清单
-updated: 2026-08-30
+updated: 2026-09-24
 ---
 
 # 等待清单
 
 > 等别人/等外部回复的事项。必须标注：等谁、等什么、跟催日期、状态。
 
+## 2026-09-11（周五）当前跟进依赖
+
+## 2026-09-24（当前等待项）
+
+| 事项 | 等待对象 | 等待内容 | 跟催日期 | 状态 |
+|------|----------|----------|----------|------|
+| AE 正式输出与验收素材 | Hison / DC / Qynnie | 按 Qynnie 模板提供输出；分别确认 strict 1:1、图片匹配 review 与 5 个未映射 AE category ID（170 items）的处理 | 2026-09-24 | 🔴 P0，待结果 |
+| TTS Pricing Center 最终状态 | Pricing Center / Hison / Xiao | 逐批次核对 Job ID、Batch ID、接收数、匹配状态、结果量与失败回执；`20260914001` 仍有 1 条接收数差异待解释 | 2026-09-24 | 🔴 P0，待系统回传 |
+| eBay Hive 与数据语义 | Nikki / DC / DE | Hive/ETA、免重爬可行性、sold_cnt region 与刷新口径、variant/model-level price 独立表方案 | 2026-09-24 | 🔴 P0，待回复 |
+| KRCB 正式交付格式 | KRCB stakeholders | 平台/站点/Cluster、全量或 active、matched/unmatched、KPI summary 或 row-level detail 的最终定义 | 2026-09-24 | ⏳ 待业务确认 |
+
+| 事项 | 等待对象 | 等待内容 | 跟催日期 | 状态 |
+|------|----------|----------|----------|------|
+| Temu category / 结果校准 | Hison / Diana | 结果已产出；核对 category 完整性、跨站点 Total/union 口径，并按 Cluster case 评估 `score` 阈值 | 2026-09-09 | 🔄 处理中，不再等待 BMO 出数 |
+| AE 匹配 / 图搜结果 | Hison / DC | 等待 AE 匹配结果和图搜结果返回；返回后由 Brian 核查覆盖、异常与差异原因。5 个未匹配 category ID（170 items）仍保留异常队列 | 2026-09-11 | 🔴 P0，等结果 |
+| TTS / Pricing Center 上传与结果 | Brian / Hison / Xiao / Pricing Center team | 系统中混有其他 task，后续用 Job ID + Batch ID 双重定位。前六个 Batch ID 已进入 Quick Matching：`20260909001`、`20260909002`、`20260909003`、`20260909004`、`20260910002`、`20260911001`。第二轮失败重传：part 1=`20260914001`，当前 `In Progress 0/206045`；part 2=`20260914002`，当前 `Pending`。part 1 本地文件为 206,046 条，页面少 1 条，待核对最终接收数及后续 Quick Matching 结果 | 2026-09-15 | 🔴 P0，第二轮 retry 处理中/排队中 |
+| eBay Hive 与沈浩交接 | Nikki / DC | 获取 eBay 完成时间和数据方案，拿到 Hive 表后交沈浩触发 matching；同时确认免重爬、新 Ceno competitor 信息、`sold_cnt` region/刷新语义 | 2026-09-11 | 🔴 P0，等回复与 Hive |
+| eBay variant/model-level price 明细落表 | Nikki / Zhou Hao / Tian Kang（DE） | 已确认原始 `variants` 可解析 `variant_id + price`；需确定独立 Hive/明细表的承载方式、字段与 ETA。item-level 主表可先保留一个代表性 price，不直接覆盖 DWD offer 主表 | 2026-09-10 | ⏳ 等 DE / Nikki 收口实现方案 |
+| 各平台 crawler 实际状态 | DC / 各平台 owner | Amazon、Temu、AE、TTS、eBay 的实际 ready、量级、owner 与 matching 触发条件；计划日期不可当完成事实 | 2026-09-04 起 | ⚠️ 需重新基线 |
+| Amazon / 图搜 / Pricing Center 历史链路 | Hison / Shen Hao / DC | Amazon 站点结果、sample / schema、Pricing Center 正式测试、score 分档与 Diana 底数的当前实际状态 | 重新确认后设定 | ⚠️ 8 月 DDL 已过期 |
+| SHEIN 范围决策 | JH / project owner | 爬虫当前不可行；是否正式以 eBay 替换 SHEIN | 待 owner 决策 | ⏸ 后置 |
+
+## 历史记录 / 重新基线前不按当前 DDL 执行
+
 | 事项 | 等待对象 | 等待内容 | 跟催日期 | 状态 |
 |------|---------|---------|---------|------|
+| Temu category 匹配结果 | BMO | 历史前置依赖；当前 Temu 结果已经产出，后续转为 category 完整性与 score 校准 | — | ✅ 已被后续结果取代 |
+| 各平台 crawler 实际交付状态 | DC / 各平台 owner | 当前计划：Amazon 9/3、Temu 9/11、AE 9/16、TikTok Shop 9/18、eBay 9/24；需逐一确认实际 ready 状态、量级与 matching 触发条件，Amazon 计划日已过 | 2026-09-04 | ⚠️ 需重新基线 |
+| Temu 全量口径纠偏与更新状态确认 | DC / Hison | 已确认 1.1M = 当前能爬到的全量 item，入口为首页/推荐流/搜索结果/类目页，因此属于曝光可观测池，可能偏向排序靠前商品；此前约 800 万底表记录并非全部更新。需补齐 source record count、crawlable count、actually refreshed count、日期和 SQL，避免再混称“全量” | 2026-08-31 | ⚠️ 口径坑已确认，待后续留痕/验证 |
 | Temu `brand_name` 字段确认 | Hison / DC | Temu QC / 取数沟通已完成，当前只需确认底表是否包含 `brand_name`；若没有，再确认替代字段或补充方式 | — | ⏳ 非当前主线，等待字段确认 |
 | TTS ready 数据复核（后置） | DC / Brian | TTS 已 ready；后续复核字段、量级、日期覆盖、图片和 brand/category 可用性，确认是否进入主链路 | — | ⏸ 后置，等待我们复核 |
 | AE 爬虫进度（后置） | DC / Leah | 预计 8 月底开发完成，随后开始爬虫，目标 2026 年 9 月 11 日上线；到节点后确认实际数据可用时间 | 2026-08-31 | ⏸ 后置，等待开发完成 |
